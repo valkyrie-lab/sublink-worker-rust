@@ -166,7 +166,7 @@ async fn xray_handler(
 
 /// Subconverter endpoint - generate subconverter config
 async fn subconverter_handler(
-    Query(params): Query<ConfigParams>,
+    Query(_params): Query<ConfigParams>,
 ) -> impl IntoResponse {
     // TODO: Implement subconverter config generation
     let mut headers = HeaderMap::new();

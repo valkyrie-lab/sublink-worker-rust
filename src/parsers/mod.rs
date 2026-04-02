@@ -4,6 +4,4 @@ pub mod proxy_parser;
 pub mod subscription_parser;
 pub mod protocols;
 
-pub use proxy_parser::{ProxyParser, ProxyConfig, ProxyType};
-pub use subscription_parser::SubscriptionParser;
-pub use protocols::*;
+pub use proxy_parser::{ProxyParser, ProxyConfig};

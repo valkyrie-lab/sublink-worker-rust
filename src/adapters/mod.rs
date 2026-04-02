@@ -2,4 +2,3 @@
 
 pub mod kv_adapter;
 
-pub use kv_adapter::KVAdapter;

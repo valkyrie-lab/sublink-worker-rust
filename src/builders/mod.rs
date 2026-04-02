@@ -8,4 +8,3 @@ pub mod base_builder;
 pub use singbox_builder::SingboxConfigBuilder;
 pub use clash_builder::ClashConfigBuilder;
 pub use surge_builder::SurgeConfigBuilder;
-pub use base_builder::BaseConfigBuilder;

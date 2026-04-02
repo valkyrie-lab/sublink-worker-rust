@@ -88,7 +88,7 @@ impl AppConfig {
 
 /// Predefined rule sets
 pub mod rules {
-    use serde_json::json;
+    
     
     /// Unified rule structure
     pub struct Rule {

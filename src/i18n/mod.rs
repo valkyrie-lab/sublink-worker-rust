@@ -1,8 +1,6 @@
 //! Internationalization (i18n) module
 
 use fluent_bundle::{FluentBundle, FluentResource};
-use fluent::FluentArgs;
-use std::collections::HashMap;
 use unic_langid::LanguageIdentifier;
 
 /// Translator for i18n
