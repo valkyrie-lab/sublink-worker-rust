@@ -26,27 +26,29 @@ impl ProxyConfig {
         }
     }
 
-    pub fn server(&self) -> &str {
-        match self {
-            ProxyConfig::ShadowSocks(c) => &c.server,
-            ProxyConfig::VMess(c) => &c.server,
-            ProxyConfig::VLESS(c) => &c.server,
-            ProxyConfig::Hysteria2(c) => &c.server,
-            ProxyConfig::Trojan(c) => &c.server,
-            ProxyConfig::TUIC(c) => &c.server,
-        }
-    }
+    // 暂时未使用的方法
+    // pub fn server(&self) -> &str {
+    //     match self {
+    //         ProxyConfig::ShadowSocks(c) => &c.server,
+    //         ProxyConfig::VMess(c) => &c.server,
+    //         ProxyConfig::VLESS(c) => &c.server,
+    //         ProxyConfig::Hysteria2(c) => &c.server,
+    //         ProxyConfig::Trojan(c) => &c.server,
+    //         ProxyConfig::TUIC(c) => &c.server,
+    //     }
+    // }
 
-    pub fn port(&self) -> u16 {
-        match self {
-            ProxyConfig::ShadowSocks(c) => c.port,
-            ProxyConfig::VMess(c) => c.port,
-            ProxyConfig::VLESS(c) => c.port,
-            ProxyConfig::Hysteria2(c) => c.port,
-            ProxyConfig::Trojan(c) => c.port,
-            ProxyConfig::TUIC(c) => c.port,
-        }
-    }
+    // 暂时未使用的方法
+    // pub fn port(&self) -> u16 {
+    //     match self {
+    //         ProxyConfig::ShadowSocks(c) => c.port,
+    //         ProxyConfig::VMess(c) => c.port,
+    //         ProxyConfig::VLESS(c) => c.port,
+    //         ProxyConfig::Hysteria2(c) => c.port,
+    //         ProxyConfig::Trojan(c) => c.port,
+    //         ProxyConfig::TUIC(c) => c.port,
+    //     }
+    // }
 
     pub fn to_singbox(&self) -> serde_json::Value {
         match self {
@@ -72,6 +74,8 @@ impl ProxyConfig {
 }
 
 /// Proxy type enum
+/// 暂时未使用，保留以备将来需要类型判断时使用
+#[allow(dead_code)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProxyType {
     ShadowSocks,
@@ -105,22 +109,23 @@ impl ProxyParser {
         }
     }
 
-    /// Get the proxy type from URL
-    pub fn get_type(url: &str) -> Option<ProxyType> {
-        if url.starts_with("ss://") {
-            Some(ProxyType::ShadowSocks)
-        } else if url.starts_with("vmess://") {
-            Some(ProxyType::VMess)
-        } else if url.starts_with("vless://") {
-            Some(ProxyType::VLESS)
-        } else if url.starts_with("hysteria2://") || url.starts_with("hy2://") || url.starts_with("hysteria://") {
-            Some(ProxyType::Hysteria2)
-        } else if url.starts_with("trojan://") {
-            Some(ProxyType::Trojan)
-        } else if url.starts_with("tuic://") {
-            Some(ProxyType::TUIC)
-        } else {
-            None
-        }
-    }
+    // 暂时未使用的函数
+    // /// Get the proxy type from URL
+    // pub fn get_type(url: &str) -> Option<ProxyType> {
+    //     if url.starts_with("ss://") {
+    //         Some(ProxyType::ShadowSocks)
+    //     } else if url.starts_with("vmess://") {
+    //         Some(ProxyType::VMess)
+    //     } else if url.starts_with("vless://") {
+    //         Some(ProxyType::VLESS)
+    //     } else if url.starts_with("hysteria2://") || url.starts_with("hy2://") || url.starts_with("hysteria://") {
+    //         Some(ProxyType::Hysteria2)
+    //     } else if url.starts_with("trojan://") {
+    //         Some(ProxyType::Trojan)
+    //     } else if url.starts_with("tuic://") {
+    //         Some(ProxyType::TUIC)
+    //     } else {
+    //         None
+    //     }
+    // }
 }

@@ -22,7 +22,9 @@ pub fn decode(input: &str) -> Result<Vec<u8>> {
         .map_err(|e| anyhow::anyhow!("Base64 decode failed: {}", e))
 }
 
+// 暂时未使用的函数
 /// Encode bytes to Base64
+#[allow(dead_code)]
 pub fn encode(data: &[u8]) -> String {
     general_purpose::STANDARD.encode(data)
 }
@@ -36,7 +38,9 @@ fn add_padding(input: &str) -> String {
     padded
 }
 
+// 暂时未使用的函数
 /// Try to decode Base64, return original if failed
+#[allow(dead_code)]
 pub fn try_decode(input: &str) -> String {
     match decode(input) {
         Ok(bytes) => String::from_utf8_lossy(&bytes).to_string(),

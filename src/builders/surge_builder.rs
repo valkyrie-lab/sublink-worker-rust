@@ -9,7 +9,8 @@ pub struct SurgeConfigBuilder {
     config: String,
     proxies: Vec<ProxyConfig>,
     selected_rules: Vec<String>,
-    subscription_url: Option<String>,
+    // 暂时未使用的字段
+    // subscription_url: Option<String>,
 }
 
 impl SurgeConfigBuilder {
@@ -45,7 +46,6 @@ impl SurgeConfigBuilder {
             config: Self::default_config(),
             proxies,
             selected_rules,
-            subscription_url: None,
         })
     }
 
@@ -71,9 +71,10 @@ proxy-test-url = http://www.gstatic.com/generate_204
 "#.to_string()
     }
 
-    pub fn set_subscription_url(&mut self, url: &str) {
-        self.subscription_url = Some(url.to_string());
-    }
+    // 暂时未使用的方法
+    // pub fn set_subscription_url(&mut self, url: &str) {
+    //     self.subscription_url = Some(url.to_string());
+    // }
 
     pub fn build(&mut self) -> Result<()> {
         let mut proxy_lines: Vec<String> = Vec::new();

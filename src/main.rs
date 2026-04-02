@@ -231,8 +231,9 @@ struct ConfigParams {
     config: Option<String>,
     #[serde(default, alias = "selectedRules")]
     selected_rules: Option<String>,
-    #[serde(default, alias = "customRules")]
-    custom_rules: Option<String>,
+    // 暂时未使用的字段
+    // #[serde(default, alias = "customRules")]
+    // custom_rules: Option<String>,
     #[serde(default)]
     ua: Option<String>,
     #[serde(default, alias = "group_by_country")]
@@ -245,8 +246,9 @@ struct ConfigParams {
     external_controller: Option<String>,
     #[serde(default, alias = "external_ui_download_url")]
     external_ui_download_url: Option<String>,
-    #[serde(default, alias = "config_id")]
-    config_id: Option<String>,
+    // 暂时未使用的字段
+    // #[serde(default, alias = "config_id")]
+    // config_id: Option<String>,
     #[serde(default)]
     lang: Option<String>,
     #[serde(default, alias = "singbox_version")]
@@ -255,10 +257,11 @@ struct ConfigParams {
     sb_version: Option<String>,
     #[serde(default, alias = "sb_ver")]
     sb_ver: Option<String>,
-    #[serde(default)]
-    url: Option<String>,
-    #[serde(default, alias = "short_code")]
-    short_code: Option<String>,
+    // 暂时未使用的字段
+    // #[serde(default)]
+    // url: Option<String>,
+    // #[serde(default, alias = "short_code")]
+    // short_code: Option<String>,
 }
 
 /// Query parameters for shorten endpoint

@@ -176,7 +176,9 @@ pub fn create_translator(lang: &str) -> Translator {
     Translator::new(lang)
 }
 
+// 暂时未使用的函数
 /// Resolve language from accept-language header or default
+#[allow(dead_code)]
 pub fn resolve_language(accept_language: Option<&str>) -> String {
     if let Some(header) = accept_language {
         // Parse accept-language header

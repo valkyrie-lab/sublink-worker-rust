@@ -139,24 +139,26 @@ impl SingboxConfigBuilder {
         "1.12".to_string()
     }
 
-    fn detect_subscription_format(content: &str) -> &'static str {
-        if let Ok(json) = serde_json::from_str::<serde_json::Value>(content) {
-            if json.get("outbound_providers").is_some() {
-                return "singbox";
-            }
-            if json.get("proxies").is_some() || json.get("proxy-groups").is_some() {
-                return "clash";
-            }
-        }
-        "unknown"
-    }
+    // 暂时未使用的函数，保留以备将来需要自动检测订阅格式时使用
+    // fn detect_subscription_format(content: &str) -> &'static str {
+    //     if let Ok(json) = serde_json::from_str::<serde_json::Value>(content) {
+    //         if json.get("outbound_providers").is_some() {
+    //             return "singbox";
+    //         }
+    //         if json.get("proxies").is_some() || json.get("proxy-groups").is_some() {
+    //             return "clash";
+    //         }
+    //     }
+    //     "unknown"
+    // }
 
-    fn is_compatible_provider_format(&self, format: &str) -> bool {
-        if self.singbox_version == "1.11" {
-            return false;
-        }
-        format == "singbox"
-    }
+    // 暂时未使用的函数
+    // fn is_compatible_provider_format(&self, format: &str) -> bool {
+    //     if self.singbox_version == "1.11" {
+    //         return false;
+    //     }
+    //     format == "singbox"
+    // }
 
     fn generate_outbound_providers(&self) -> Vec<Value> {
         self.provider_urls.iter().enumerate().map(|(index, _)| {
@@ -607,9 +609,10 @@ impl SingboxConfigBuilder {
         rules_list
     }
 
-    pub fn format_config(&self) -> String {
-        serde_json::to_string_pretty(&self.config).unwrap_or_default()
-    }
+    // 暂时未使用的函数
+    // pub fn format_config(&self) -> String {
+    //     serde_json::to_string_pretty(&self.config).unwrap_or_default()
+    // }
 
     pub fn get_config(&self) -> &Value {
         &self.config

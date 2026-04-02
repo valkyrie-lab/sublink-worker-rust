@@ -1,11 +1,14 @@
 //! Subscription parser - parses subscription links and formats
+//! 暂时未使用，保留以备将来需要独立订阅解析功能时使用
 
 use anyhow::Result;
 use crate::utils::base64_utils;
 
 /// Subscription parser
+#[allow(dead_code)]
 pub struct SubscriptionParser;
 
+#[allow(dead_code)]
 impl SubscriptionParser {
     /// Parse subscription content into a list of proxy URLs
     pub fn parse(content: &str) -> Result<Vec<String>> {

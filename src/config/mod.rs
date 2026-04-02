@@ -192,46 +192,56 @@ pub mod rules {
     
     /// Rule names that should default to DIRECT instead of Node Select
     pub const DIRECT_DEFAULT_RULES: &[&str] = &["Private", "Location:CN"];
-    
-    pub const MINIMAL: &[&str] = &["Location:CN", "Private", "Non-China"];
-    pub const BALANCED: &[&str] = &[
-        "Location:CN", "Private", "Non-China", "Github", "Google", "Youtube", "AI Services", "Telegram",
-    ];
-    pub const COMPREHENSIVE: &[&str] = &[
-        "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private", 
-        "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
-        "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
-    ];
-    
-    pub fn get_preset(name: &str) -> Option<&[&str]> {
-        match name {
-            "minimal" => Some(MINIMAL),
-            "balanced" => Some(BALANCED),
-            "comprehensive" => Some(COMPREHENSIVE),
-            _ => None,
-        }
-    }
-    
+
+    // 暂时未使用的常量
+    // pub const MINIMAL: &[&str] = &["Location:CN", "Private", "Non-China"];
+    // pub const BALANCED: &[&str] = &[
+    //     "Location:CN", "Private", "Non-China", "Github", "Google", "Youtube", "AI Services", "Telegram",
+    // ];
+    // pub const COMPREHENSIVE: &[&str] = &[
+    //     "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private",
+    //     "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
+    //     "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
+    // ];
+
+    // 暂时未使用的函数
+    // pub fn get_preset(name: &str) -> Option<&[&str]> {
+    //     match name {
+    //         "minimal" => Some(MINIMAL),
+    //         "balanced" => Some(BALANCED),
+    //         "comprehensive" => Some(COMPREHENSIVE),
+    //         _ => None,
+    //     }
+    // }
+
     pub fn get_rule_by_name(name: &str) -> Option<&'static Rule> {
         UNIFIED_RULES.iter().find(|rule| rule.name == name)
     }
-    
-    pub fn get_all_rule_names() -> &'static [&'static str] {
-        &[
-            "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private",
-            "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
-            "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
-        ]
-    }
+
+    // 暂时未使用的函数
+    // pub fn get_all_rule_names() -> &'static [&'static str] {
+    //     &[
+    //         "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private",
+    //         "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
+    //         "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
+    //     ]
+    // }
 }
 
 /// Rule set base URLs
+/// 暂时未使用，保留以备将来需要使用不同规则集时使用
 pub mod rule_urls {
+    #[allow(dead_code)]
     pub const SITE_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/";
+    #[allow(dead_code)]
     pub const IP_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/";
+    #[allow(dead_code)]
     pub const CLASH_SITE_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/";
+    #[allow(dead_code)]
     pub const CLASH_IP_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/";
+    #[allow(dead_code)]
     pub const SURGE_SITE_RULE_SET_BASEURL: &str = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/";
+    #[allow(dead_code)]
     pub const SURGE_IP_RULE_SET_BASEURL: &str = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/";
 }
 
@@ -413,9 +423,11 @@ pub mod singbox_config {
 }
 
 /// Clash default configuration
+/// 暂时未使用，保留以备将来需要 Clash 默认配置时使用
+#[allow(dead_code)]
 pub mod clash_config {
     use serde_yaml::Value;
-    
+
     pub fn default() -> Value {
         serde_yaml::from_str(r#"
 port: 7890
@@ -440,6 +452,8 @@ rules: []
 }
 
 /// Surge default configuration
+/// 暂时未使用，保留以备将来需要 Surge 默认配置时使用
+#[allow(dead_code)]
 pub mod surge_config {
     pub fn default() -> String {
         r#"[General]
