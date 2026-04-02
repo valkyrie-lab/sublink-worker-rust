@@ -1,0 +1,393 @@
+//! Configuration module
+
+use serde::{Deserialize, Serialize};
+use std::path::Path;
+
+/// Application configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AppConfig {
+    /// Server host
+    #[serde(default = "default_host")]
+    pub host: String,
+    
+    /// Server port
+    #[serde(default = "default_port")]
+    pub port: u16,
+    
+    /// Redis URL (optional)
+    pub redis_url: Option<String>,
+    
+    /// SQLite database path (optional)
+    pub database_path: Option<String>,
+    
+    /// Short link TTL in seconds
+    #[serde(default = "default_short_link_ttl")]
+    pub short_link_ttl_seconds: u64,
+    
+    /// Config TTL in seconds
+    #[serde(default = "default_config_ttl")]
+    pub config_ttl_seconds: u64,
+    
+    /// Log level
+    #[serde(default = "default_log_level")]
+    pub log_level: String,
+}
+
+fn default_host() -> String {
+    "0.0.0.0".to_string()
+}
+
+fn default_port() -> u16 {
+    8787
+}
+
+fn default_short_link_ttl() -> u64 {
+    3600 // 1 hour
+}
+
+fn default_config_ttl() -> u64 {
+    86400 // 24 hours
+}
+
+fn default_log_level() -> String {
+    "info".to_string()
+}
+
+impl AppConfig {
+    /// Load configuration from file and environment
+    pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
+        let config_path = std::env::var("CONFIG_PATH").unwrap_or_else(|_| "config.toml".to_string());
+        
+        if Path::new(&config_path).exists() {
+            let config_str = std::fs::read_to_string(&config_path)?;
+            let config: AppConfig = toml::from_str(&config_str)?;
+            Ok(config)
+        } else {
+            // Load from environment
+            Ok(AppConfig {
+                host: std::env::var("HOST").unwrap_or_else(|_| default_host()),
+                port: std::env::var("PORT")
+                    .ok()
+                    .and_then(|p| p.parse().ok())
+                    .unwrap_or_else(default_port),
+                redis_url: std::env::var("REDIS_URL").ok(),
+                database_path: std::env::var("DATABASE_PATH").ok(),
+                short_link_ttl_seconds: std::env::var("SHORT_LINK_TTL")
+                    .ok()
+                    .and_then(|s| s.parse().ok())
+                    .unwrap_or_else(default_short_link_ttl),
+                config_ttl_seconds: std::env::var("CONFIG_TTL")
+                    .ok()
+                    .and_then(|s| s.parse().ok())
+                    .unwrap_or_else(default_config_ttl),
+                log_level: std::env::var("LOG_LEVEL").unwrap_or_else(|_| default_log_level()),
+            })
+        }
+    }
+}
+
+/// Predefined rule sets
+pub mod rules {
+    use serde_json::json;
+    
+    /// Unified rule structure
+    pub struct Rule {
+        pub name: &'static str,
+        pub site_rules: &'static [&'static str],
+        pub ip_rules: &'static [&'static str],
+    }
+    
+    pub const UNIFIED_RULES: &[Rule] = &[
+        Rule {
+            name: "Ad Block",
+            site_rules: &["category-ads-all"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "AI Services",
+            site_rules: &["category-ai-!cn"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Bilibili",
+            site_rules: &["bilibili"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Youtube",
+            site_rules: &["youtube"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Google",
+            site_rules: &["google"],
+            ip_rules: &["google"],
+        },
+        Rule {
+            name: "Private",
+            site_rules: &[],
+            ip_rules: &["private"],
+        },
+        Rule {
+            name: "Location:CN",
+            site_rules: &["geolocation-cn", "cn"],
+            ip_rules: &["cn"],
+        },
+        Rule {
+            name: "Telegram",
+            site_rules: &[],
+            ip_rules: &["telegram"],
+        },
+        Rule {
+            name: "Github",
+            site_rules: &["github", "gitlab"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Microsoft",
+            site_rules: &["microsoft"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Apple",
+            site_rules: &["apple"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Social Media",
+            site_rules: &["facebook", "instagram", "twitter", "tiktok", "linkedin"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Streaming",
+            site_rules: &["netflix", "hulu", "disney", "hbo", "amazon", "bahamut"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Gaming",
+            site_rules: &["steam", "epicgames", "ea", "ubisoft", "blizzard"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Education",
+            site_rules: &["coursera", "edx", "udemy", "khanacademy", "category-scholar-!cn"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Financial",
+            site_rules: &["paypal", "visa", "mastercard", "stripe", "wise"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Cloud Services",
+            site_rules: &["aws", "azure", "digitalocean", "heroku", "dropbox"],
+            ip_rules: &[],
+        },
+        Rule {
+            name: "Non-China",
+            site_rules: &["geolocation-!cn"],
+            ip_rules: &[],
+        },
+    ];
+    
+    /// Rule names that should default to DIRECT instead of Node Select
+    pub const DIRECT_DEFAULT_RULES: &[&str] = &["Private", "Location:CN"];
+    
+    pub const MINIMAL: &[&str] = &["Location:CN", "Private", "Non-China"];
+    pub const BALANCED: &[&str] = &[
+        "Location:CN", "Private", "Non-China", "Github", "Google", "Youtube", "AI Services", "Telegram",
+    ];
+    pub const COMPREHENSIVE: &[&str] = &[
+        "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private", 
+        "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
+        "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
+    ];
+    
+    pub fn get_preset(name: &str) -> Option<&[&str]> {
+        match name {
+            "minimal" => Some(MINIMAL),
+            "balanced" => Some(BALANCED),
+            "comprehensive" => Some(COMPREHENSIVE),
+            _ => None,
+        }
+    }
+    
+    pub fn get_rule_by_name(name: &str) -> Option<&'static Rule> {
+        UNIFIED_RULES.iter().find(|rule| rule.name == name)
+    }
+    
+    pub fn get_all_rule_names() -> &'static [&'static str] {
+        &[
+            "Ad Block", "AI Services", "Bilibili", "Youtube", "Google", "Private",
+            "Location:CN", "Telegram", "Github", "Microsoft", "Apple", "Social Media",
+            "Streaming", "Gaming", "Education", "Financial", "Cloud Services", "Non-China",
+        ]
+    }
+}
+
+/// Rule set base URLs
+pub mod rule_urls {
+    pub const SITE_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geosite/";
+    pub const IP_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/lyc8503/sing-box-rules/rule-set-geoip/";
+    pub const CLASH_SITE_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/";
+    pub const CLASH_IP_RULE_SET_BASE_URL: &str = "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/";
+    pub const SURGE_SITE_RULE_SET_BASEURL: &str = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/";
+    pub const SURGE_IP_RULE_SET_BASEURL: &str = "https://raw.githubusercontent.com/DivineEngine/Profiles/master/Surge/";
+}
+
+/// SingBox default configurations
+pub mod singbox_config {
+    use serde_json::json;
+    
+    pub fn default_v1_12() -> serde_json::Value {
+        json!({
+            "log": {
+                "level": "info",
+                "timestamp": true
+            },
+            "dns": {
+                "servers": [
+                    {
+                        "tag": "dns_proxy",
+                        "address": "tls://1.1.1.1"
+                    },
+                    {
+                        "tag": "dns_direct",
+                        "address": "h3://dns.alidns.com/dns-query"
+                    }
+                ],
+                "rules": [
+                    {
+                        "outbound": "any",
+                        "server": "dns_direct"
+                    }
+                ]
+            },
+            "inbounds": [
+                {
+                    "type": "tun",
+                    "tag": "tun-in",
+                    "inet4_address": "172.19.0.1/30",
+                    "auto_route": true,
+                    "strict_route": true
+                }
+            ],
+            "outbounds": [
+                {
+                    "type": "direct",
+                    "tag": "direct"
+                },
+                {
+                    "type": "block",
+                    "tag": "block"
+                }
+            ],
+            "route": {
+                "rules": [],
+                "rule_set": []
+            }
+        })
+    }
+    
+    pub fn default_v1_11() -> serde_json::Value {
+        json!({
+            "log": {
+                "level": "info",
+                "timestamp": true
+            },
+            "dns": {
+                "servers": [
+                    {
+                        "tag": "dns_proxy",
+                        "address": "tls://1.1.1.1"
+                    },
+                    {
+                        "tag": "dns_direct",
+                        "address": "223.5.5.5"
+                    }
+                ]
+            },
+            "inbounds": [
+                {
+                    "type": "tun",
+                    "tag": "tun-in",
+                    "inet4_address": "172.19.0.1/30",
+                    "auto_route": true,
+                    "strict_route": true
+                }
+            ],
+            "outbounds": [
+                {
+                    "type": "direct",
+                    "tag": "direct"
+                },
+                {
+                    "type": "block",
+                    "tag": "block"
+                }
+            ],
+            "route": {
+                "rules": []
+            }
+        })
+    }
+}
+
+/// Clash default configuration
+pub mod clash_config {
+    use serde_yaml::Value;
+    
+    pub fn default() -> Value {
+        serde_yaml::from_str(r#"
+port: 7890
+socks-port: 7891
+allow-lan: false
+mode: rule
+log-level: info
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  nameserver:
+    - 223.5.5.5
+    - 114.114.114.114
+  fallback:
+    - tls://1.1.1.1
+    - tls://8.8.8.8
+proxies: []
+proxy-groups: []
+rules: []
+"#).unwrap()
+    }
+}
+
+/// Surge default configuration
+pub mod surge_config {
+    pub fn default() -> String {
+        r#"[General]
+loglevel = notify
+dns-server = 223.5.5.5, 114.114.114.114
+
+[Proxy]
+
+[Proxy Group]
+
+[Rule]
+"#.to_string()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_rule_by_name() {
+        let rule = rules::get_rule_by_name("Google");
+        assert!(rule.is_some());
+        assert_eq!(rule.unwrap().name, "Google");
+        
+        let rule = rules::get_rule_by_name("AI Services");
+        assert!(rule.is_some());
+        assert_eq!(rule.unwrap().site_rules, &["category-ai-!cn"]);
+    }
+}

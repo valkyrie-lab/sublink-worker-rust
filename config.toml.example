@@ -1,0 +1,16 @@
+# Server configuration
+host = "0.0.0.0"
+port = 8787
+
+# Redis configuration (optional, for short links)
+# redis_url = "redis://localhost:6379"
+
+# SQLite database path (optional, for config storage)
+# database_path = "/data/sublink.db"
+
+# TTL settings
+short_link_ttl_seconds = 3600
+config_ttl_seconds = 86400
+
+# Log level (trace, debug, info, warn, error)
+log_level = "info"
