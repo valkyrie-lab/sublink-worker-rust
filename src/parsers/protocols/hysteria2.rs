@@ -61,14 +61,19 @@ impl Hysteria2Config {
         let password = urlencoding::decode(password_host_port[0])
             .unwrap_or_else(|_| password_host_port[0].to_string().into())
             .to_string();
-        
-        let host_port: Vec<&str> = password_host_port[1].rsplitn(2, ':').collect();
+
+        // Extract host:port from the string (before any path/query)
+        // The format is host:port/path?query - we only want host:port
+        let host_port_str = password_host_port[1].splitn(2, '/').next().unwrap_or(password_host_port[1]);
+        let host_port: Vec<&str> = host_port_str.rsplitn(2, ':').collect();
         if host_port.len() != 2 {
             bail!("Invalid host:port format");
         }
 
         let server = host_port[1].to_string();
-        let port = host_port[0].parse::<u16>()?;
+        // Parse port, stripping any non-numeric trailing characters
+        let port_str = host_port[0].trim_end_matches(|c: char| !c.is_ascii_digit());
+        let port = port_str.parse::<u16>()?;
 
         // Parse query parameters
         let mut params = HashMap::new();

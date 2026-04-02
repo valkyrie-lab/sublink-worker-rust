@@ -60,6 +60,7 @@ outboundName-Education = 📚 教育资源
 outboundName-Financial = 💰 金融服务
 outboundName-CloudServices = ☁️ 云服务
 outboundName-Non-China = 🌐 非中国
+outboundName-NonChina = 🌐 非中国
 "#.to_string()
             ).unwrap(),
         ]
@@ -91,6 +92,7 @@ outboundName-Education = 📚 Education Resources
 outboundName-Financial = 💰 Financial Services
 outboundName-CloudServices = ☁️ Cloud Services
 outboundName-Non-China = 🌐 Non-China
+outboundName-NonChina = 🌐 Non-China
 "#.to_string()
             ).unwrap(),
         ]
@@ -122,6 +124,7 @@ outboundName-Education = 📚 منابع آموزشی
 outboundName-Financial = 💰 سرویس‌های مالی
 outboundName-CloudServices = ☁️ سرویس‌های ابری
 outboundName-Non-China = 🌐 خارج از چین
+outboundName-NonChina = 🌐 خارج از چین
 "#.to_string()
             ).unwrap(),
         ]
@@ -153,6 +156,7 @@ outboundName-Education = 📚 Образовательные ресурсы
 outboundName-Financial = 💰 Финансовые сервисы
 outboundName-CloudServices = ☁️ Облачные сервисы
 outboundName-Non-China = 🌐 За пределами Китая
+outboundName-NonChina = 🌐 За пределами Китая
 "#.to_string()
             ).unwrap(),
         ]

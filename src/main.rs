@@ -65,14 +65,25 @@ async fn singbox_handler(
     let ua = params.ua.as_deref().filter(|s| !s.is_empty());
     let group_by_country = parse_bool(params.group_by_country.as_deref(), false);
     let include_auto_select = parse_bool(params.include_auto_select.as_deref(), true);
+    let singbox_version = params.singbox_version.as_deref()
+        .or(params.sb_version.as_deref())
+        .or(params.sb_ver.as_deref())
+        .filter(|s| !s.is_empty());
+    let enable_clash_ui = parse_bool(params.enable_clash_ui.as_deref(), false);
+    let external_controller = params.external_controller.as_deref().filter(|s| !s.is_empty());
+    let external_ui_download_url = params.external_ui_download_url.as_deref().filter(|s| !s.is_empty());
 
     match crate::builders::SingboxConfigBuilder::new(
-        config_param, 
-        selected_rules, 
-        lang, 
+        config_param,
+        selected_rules,
+        lang,
         ua,
         group_by_country,
         include_auto_select,
+        singbox_version,
+        enable_clash_ui,
+        external_controller,
+        external_ui_download_url,
     ).await {
         Ok(mut builder) => {
             if let Err(e) = builder.build() {
@@ -261,11 +272,24 @@ struct ShortenParams {
 fn parse_selected_rules(raw: Option<&str>) -> Vec<String> {
     if let Some(rules) = raw {
         if rules.is_empty() {
-            return vec!["Google".to_string(), "Youtube".to_string()];
+            // Default to minimal rules (same as JS version)
+            return vec![
+                "Location:CN".to_string(),
+                "Private".to_string(),
+                "Non-China".to_string(),
+            ];
         }
 
         // Try to parse as JSON array
         if let Ok(parsed) = serde_json::from_str::<Vec<String>>(rules) {
+            if parsed.is_empty() {
+                // Default to minimal rules (same as JS version)
+                return vec![
+                    "Location:CN".to_string(),
+                    "Private".to_string(),
+                    "Non-China".to_string(),
+                ];
+            }
             return parsed;
         }
 
@@ -274,7 +298,11 @@ fn parse_selected_rules(raw: Option<&str>) -> Vec<String> {
     }
 
     // Default rules
-    vec!["Google".to_string(), "Youtube".to_string()]
+    vec![
+        "Location:CN".to_string(),
+        "Private".to_string(),
+        "Non-China".to_string(),
+    ]
 }
 
 /// Parse boolean from string
