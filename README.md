@@ -1,69 +1,54 @@
 # Sublink Worker (Rust Version)
 
-> A lightweight subscription converter and manager for proxy protocols, rewritten in Rust.
+> A lightweight subscription converter, rewritten in Rust. **Powered by Qwen 3.5 & MiniMax M2.7**.
+
+## ✨ AI Contributions
+
+- **Qwen 3.5**
+- **MiniMax M2.7**
 
 ## Features
 
-- 🚀 High performance with minimal resource usage
+- 🚀 High performance, low memory footprint
 - 🔒 Memory safety with Rust
-- 📦 Single binary deployment with musl libc
-- 🎯 Cross-compiled for mipsel-unknown-linux-musl (MIPS LE architecture)
-- 🌐 Multi-language support (Chinese, English, Persian, Russian)
+- 📦 Single binary deployment with musl static linking
+- 🎯 Cross-platform (mipsel/aarch64/x86_64)
+- 🌐 Multi-language support
 
 ## Supported Protocols
 
-- ShadowSocks
-- VMess
-- VLESS
-- Hysteria2
-- Trojan
-- TUIC
+ShadowSocks · VMess · VLESS · Hysteria2 · Trojan · TUIC
 
 ## Client Support
 
-- Sing-Box
-- Clash
-- Surge
-- Xray/V2Ray
+Sing-Box · Clash · Surge · Xray/V2Ray
 
 ## Quick Start
 
 ### Build from Source
 
 ```bash
-# Install mipsel cross compiler
-# Ubuntu/Debian
-apt-get install gcc-mipsel-linux-gnu
-
-# Arch Linux
-pacman -S mipsel-linux-gnu-gcc
-
-# Build
-./scripts/build-mipsel.sh
+cargo build --target <target> --release
 ```
 
-### Using Docker
+For mipsel-linux-musl target
 
 ```bash
-docker build -t sublink-worker-rust .
-docker run -p 8787:8787 sublink-worker-rust
+nix-shell --run "cargo build --target mipsel-unknown-linux-musl --release -Zbuild-std=std,panic_abort"
 ```
 
 ### Configuration
 
-Create a `config.toml` file:
+Create `config.toml`:
 
 ```toml
 host = "0.0.0.0"
 port = 8787
-redis_url = "redis://localhost:6379"
 database_path = "/data/sublink.db"
-short_link_ttl_seconds = 3600
-config_ttl_seconds = 86400
 log_level = "info"
 ```
 
-Or use environment variables:
+Or configure via environment variables.
 
 ```bash
 export HOST=0.0.0.0
@@ -106,26 +91,10 @@ export LOG_LEVEL=info
 - `config_id`: Use stored configuration
 - `lang`: Language preference
 
-## Building for Other Targets
-
-```bash
-# Add target
-rustup target add <target-triple>
-
-# Build
-cargo build --release --target <target-triple>
-```
-
-Common targets:
-- `x86_64-unknown-linux-musl`
-- `aarch64-unknown-linux-musl`
-- `armv7-unknown-linux-musleabihf`
-- `mipsel-unknown-linux-musl`
-
 ## License
 
 MIT License
 
 ## Disclaimer
 
-This project is for learning and exchange purposes only. Please do not use it for illegal purposes.
+This project is for learning purposes only. Do not use for illegal purposes.
