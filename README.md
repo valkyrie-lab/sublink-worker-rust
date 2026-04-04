@@ -37,6 +37,21 @@ For mipsel-linux-musl target
 nix-shell --run "cargo build --target mipsel-unknown-linux-musl --release -Zbuild-std=std,panic_abort"
 ```
 
+### OpenWRT Packaging
+
+```bash
+# Build ipk package
+nix-shell package.nix
+build-ipk
+
+# Output: sublink_1.0.0-1_mipsel_24kc.ipk
+```
+
+Install on router:
+```bash
+opkg install sublink_1.0.0-1_mipsel_24kec.ipk
+```
+
 ### Configuration
 
 Create `config.toml`:
